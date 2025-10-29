@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบวัดเจตคติเชิงกลยุทธ์ | Strategic Attitude Assessment</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #1a5276;
+            --secondary: #2e86c1;
+            --accent: #f39c12;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--accent);
+        }
+        
+        header h1 {
+            margin-bottom: 15px;
+            font-size: 2.4rem;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 0;
+        }
+        
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 25px;
+            margin: 0 8px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .lang-btn.active {
+            background: white;
+            color: var(--primary);
+            font-weight: bold;
+            border-color: white;
+        }
+        
+        .card {
+            padding: 35px;
+        }
+        
+        .section-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .section-header h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-header h2::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 30px;
+            background: var(--accent);
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+        
+        .section-description {
+            color: var(--dark);
+            margin-top: 10px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .question {
+            margin-bottom: 35px;
+            padding: 25px;
+            background: var(--light);
+            border-radius: 10px;
+            border-left: 5px solid var(--secondary);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .question:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .option {
+            flex: 1;
+            min-width: 130px;
+        }
+        
+        .option input {
+            display: none;
+        }
+        
+        .option label {
+            display: block;
+            padding: 14px 18px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .option input:checked + label {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        .option label:hover {
+            background: #e8f4fc;
+            border-color: var(--secondary);
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 2px solid var(--light);
+        }
+        
+        button {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button i {
+            margin-right: 8px;
+        }
+        
+        #prevBtn {
+            background: var(--light);
+            color: var(--dark);
+        }
+        
+        #nextBtn, #submitBtn {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        #prevBtn:hover, #nextBtn:hover, #submitBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        #prevBtn:hover {
+            background: #e0e0e0;
+        }
+        
+        #nextBtn:hover, #submitBtn:hover {
+            background: var(--primary);
+        }
+        
+        .progress-container {
+            margin: 30px 0;
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .progress-text {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .progress-percentage {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            width: 0%;
+            transition: width 0.5s;
+            border-radius: 6px;
+        }
+        
+        .result-container {
+            display: none;
+            padding: 40px 30px;
+        }
+        
+        .result-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .result-header h2 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .result-score {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin: 25px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-message {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            color: var(--dark);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        .results-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-container {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .dimension-scores {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .dimension {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .dimension-name {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        
+        .dimension-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        
+        .dimension-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .dimension-progress {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 1s;
+        }
+        
+        .recommendations {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .recommendations h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        
+        .recommendations ul {
+            padding-left: 20px;
+        }
+        
+        .recommendations li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .options {
+                flex-direction: column;
+            }
+            
+            .option {
+                min-width: 100%;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .dimension {
+                min-width: 100%;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+            
+            .results-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="lang-th">แบบทดสอบวัดเจตคติเชิงกลยุทธ์ในองค์กร</h1>
+            <h1 class="lang-en" style="display: none;">Strategic Attitude Assessment</h1>
+            <p class="lang-th">แบบประเมินนี้จะช่วยประเมินเจตคติเชิงกลยุทธ์ของคุณใน 5 มิติสำคัญต่อความสำเร็จขององค์กร</p>
+            <p class="lang-en" style="display: none;">This assessment will evaluate your strategic attitude across 5 key dimensions critical to organizational success</p>
+            
+            <div class="language-toggle">
+                <button class="lang-btn active" id="thaiBtn"><i class="fas fa-language"></i> ไทย</button>
+                <button class="lang-btn" id="englishBtn"><i class="fas fa-language"></i> English</button>
+            </div>
+        </header>
+        
+        <div class="card">
+            <div class="progress-container">
+                <div class="progress-header">
+                    <div class="progress-text">
+                        <span class="lang-th">ส่วนที่ </span><span class="lang-en" style="display: none;">Section </span>
+                        <span id="currentSection">1</span> <span class="lang-th">จาก 5</span><span class="lang-en" style="display: none;">of 5</span>
+                    </div>
+                    <div class="progress-percentage" id="progressPercentage">20%</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+            </div>
+            
+            <form id="strategicAttitudeTest">
+                <!-- Section 1: Strategic Thinking -->
+                <div class="section" id="section1">
+                    <div class="section-header">
+                        <h2 class="lang-th">1. การคิดเชิงกลยุทธ์</h2>
+                        <h2 class="lang-en" style="display: none;">1. Strategic Thinking</h2>
+                        <div class="section-description lang-th">
+                            ความสามารถในการเชื่อมโยงการดำเนินงานประจำวันกับเป้าหมายระยะยาวขององค์กร และการคาดการณ์แนวโน้มในอนาคต
+                        </div>
+                        <div class="section-description lang-en" style="display: none;">
+                            Ability to connect daily operations with long-term organizational goals and anticipate future trends
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text lang-th">1. ฉันมักวิเคราะห์ว่าการตัดสินใจในปัจจุบันจะส่งผลต่อเป้าหมายระยะยาวขององค์กรอย่างไร</div>
+                        <div class="question-text lang-en" style="display: none;">1. I often analyze how current decisions will impact the organization's long-term goals</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q1_1" name="q1" value="1">
+                                <label for="q1_1" class="lang-th">ไม่เคย</label>
+                                <label for="q1_1" class="lang-en" style="display: none;">Never</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q1_2" name="q1" value="2">
+                                <label for="q1_2" class="lang-th">นานๆ ครั้ง</label>
+                                <label for="q1_2" class="lang-en" style="display: none;">Rarely</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q1_3" name="q1" value="3">
+                                <label for="q1_3" class="lang-th">บางครั้ง</label>
+                                <label for="q1_3" class="lang-en" style="display: none;">Sometimes</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q1_4" name="q1" value="4">
+                                <label for="q1_4" class="lang-th">บ่อยครั้ง</label>
+                                <label for="q1_4" class="lang-en" style="display: none;">Often</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q1_5" name="q1" value="5">
+                                <label for="q1_5" class="lang-th">เป็นประจำ</label>
+                                <label for="q1_5" class="lang-en" style="display: none;">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text lang-th">2. ฉันติดตามและวิเคราะห์แนวโน้มของอุตสาหกรรมเพื่อระบุโอกาสและภัยคุกคามต่อองค์กร</div>
+                        <div class="question-text lang-en" style="display: none;">2. I track and analyze industry trends to identify opportunities and threats to the organization</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q2_1" name="q2" value="1">
+                                <label for="q2_1" class="lang-th">ไม่เคย</label>
+                                <label for="q2_1" class="lang-en" style="display: none;">Never</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2_2" name="q2" value="2">
+                                <label for="q2_2" class="lang-th">นานๆ ครั้ง</label>
+                                <label for="q2_2" class="lang-en" style="display: none;">Rarely</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2_3" name="q2" value="3">
+                                <label for="q2_3" class="lang-th">บางครั้ง</label>
+                                <label for="q2_3" class="lang-en" style="display: none;">Sometimes</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2_4" name="q2" value="4">
+                                <label for="q2_4" class="lang-th">บ่อยครั้ง</label>
+                                <label for="q2_4" class="lang-en" style="display: none;">Often</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q2_5" name="q2" value="5">
+                                <label for="q2_5" class="lang-th">เป็นประจำ</label>
+                                <label for="q2_5" class="lang-en" style="display: none;">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 2: Change Leadership -->
+                <div class="section" id="section2" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="lang-th">2. การเป็นผู้นำการเปลี่ยนแปลง</h2>
+                        <h2 class="lang-en" style="display: none;">2. Change Leadership</h2>
+                        <div class="section-description lang-th">
+                            ความสามารถในการผลักดันและบริหารการเปลี่ยนแปลง รวมถึงการสร้างการยอมรับจากผู้มีส่วนได้ส่วนเสีย
+                        </div>
+                        <div class="section-description lang-en" style="display: none;">
+                            Ability to drive and manage change, and build acceptance among stakeholders
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text lang-th">3. ฉันสามารถโน้มน้าวให้ผู้มีส่วนได้ส่วนเสียเห็นคุณค่าและสนับสนุนการเปลี่ยนแปลงที่สำคัญ</div>
+                        <div class="question-text lang-en" style="display: none;">3. I can persuade stakeholders to see the value and support important changes</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q3_1" name="q3" value="1">
+                                <label for="q3_1" class="lang-th">ไม่เคย</label>
+                                <label for="q3_1" class="lang-en" style="display: none;">Never</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q3_2" name="q3" value="2">
+                                <label for="q3_2" class="lang-th">นานๆ ครั้ง</label>
+                                <label for="q3_2" class="lang-en" style="display: none;">Rarely</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q3_3" name="q3" value="3">
+                                <label for="q3_3" class="lang-th">บางครั้ง</label>
+                                <label for="q3_3" class="lang-en" style="display: none;">Sometimes</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q3_4" name="q3" value="4">
+                                <label for="q3_4" class="lang-th">บ่อยครั้ง</label>
+                                <label for="q3_4" class="lang-en" style="display: none;">Often</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q3_5" name="q3" value="5">
+                                <label for="q3_5" class="lang-th">เป็นประจำ</label>
+                                <label for="q3_5" class="lang-en" style="display: none;">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text lang-th">4. ฉันพัฒนายุทธศาสตร์เพื่อลดการต่อต้านและเพิ่มการยอมรับการเปลี่ยนแปลงในองค์กร</div>
+                        <div class="question-text lang-en" style="display: none;">4. I develop strategies to reduce resistance and increase acceptance of change in the organization</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q4_1" name="q4" value="1">
+                                <label for="q4_1" class="lang-th">ไม่เคย</label>
+                                <label for="q4_1" class="lang-en" style="display: none;">Never</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q4_2" name="q4" value="2">
+                                <label for="q4_2" class="lang-th">นานๆ ครั้ง</label>
+                                <label for="q4_2" class="lang-en" style="display: none;">Rarely</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q4_3" name="q4" value="3">
+                                <label for="q4_3" class="lang-th">บางครั้ง</label>
+                                <label for="q4_3" class="lang-en" style="display: none;">Sometimes</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q4_4" name="q4" value="4">
+                                <label for="q4_4" class="lang-th">บ่อยครั้ง</label>
+                                <label for="q4_4" class="lang-en" style="display: none;">Often</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q4_5" name="q4" value="5">
+                                <label for="q4_5" class="lang-th">เป็นประจำ</label>
+                                <label for="q4_5" class="lang-en" style="display: none;">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 3: Strategic Alignment -->
+                <div class="section" id="section3" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="lang-th">3. การเชื่อมโยงเชิงกลยุทธ์</h2>
+                        <h2 class="lang-en" style="display: none;">3. Strategic Alignment</h2>
+                        <div class="section-description lang-th">
+                            ความสามารถในการประสานงานเป้าหมายของทีม/หน่วยงานกับวิสัยทัศน์และกลยุทธ์องค์กร
+                        </div>
+                        <div class="section-description lang-en" style="display: none;">
+                            Ability to align team/department goals with organizational vision and strategy
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text lang-th">5. ฉันออกแบบแผนงานของทีมให้สอดคล้องและสนับสนุนกลยุทธ์หลักขององค์กรอย่างชัดเจน</div>
+                        <div class="question-text lang-en" style="display: none;">5. I design team plans to clearly align with and support the organization's core strategy</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q5_1" name="q5" value="1">
+                                <label for="q5_1" class="lang-th">ไม่เคย</label>
+                                <label for="q5_1" class="lang-en" style="display: none;">Never</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q5_2" name="q5" value="2">
+                                <label for="q5_2" class="lang-th">นานๆ ครั้ง</label>
+                                <label for="q5_2" class="lang-en" style="display: none;">Rarely</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q5_3" name="q5" value="3">
+                                <label for="q5_3" class="lang-th">บางครั้ง</label>
+                                <label for="q5_3" class="lang-en" style="display: none;">Sometimes</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q5_4" name="q5" value="4">
+                                <label for="q5_4" class="lang-th">บ่อยครั้ง</label>
+                                <label for="q5_4" class="lang-en" style="display: none;">Often</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q5_5" name="q5" value="5">
+                                <label for="q5_5" class="lang-th">เป็นประจำ</label>
+                                <label for="q5_5" class="lang-en" style="display: none;">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text lang-th">6. ฉันสื่อสารและสร้างความเข้าใจเกี่ยวกับกลยุทธ์องค์กรให้ทีมงานเชื่อมโยงกับการทำงานประจำวัน</div>
+                        <div class="question-text lang-en" style="display: none;">6. I communicate and build understanding of organizational strategy so the team can connect it to daily work</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q6_1" name="q6" value="1">
+                                <label for="q6_1" class="lang-th">ไม่เคย</label>
+                                <label for="q6_1" class="lang-en" style="display: none;">Never</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q6_2" name="q6" value="2">
+                                <label for="q6_2" class="lang-th">นานๆ ครั้ง</label>
+                                <label for="q6_2" class="lang-en" style="display: none;">Rarely</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q6_3" name="q6" value="3">
+                                <label for="q6_3" class="lang-th">บางครั้ง</label>
+                                <label for="q6_3" class="lang-en" style="display: none;">Sometimes</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q6_4" name="q6" value="4">
+                                <label for="q6_4" class="lang-th">บ่อยครั้ง</label>
+                                <label for="q6_4" class="lang-en" style="display: none;">Often</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q6_5" name="q6" value="5">
+                                <label for="q6_5" class="lang-th">เป็นประจำ</label>
+                                <label for="q6_5" class="lang-en" style="display: none;">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 4: Innovation & Competitive Advantage -->
+                <div class="section" id="section4" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="lang-th">4. นวัตกรรมและความได้เปรียบทางการแข่งขัน</h2>
+                        <h2 class="lang-en" style="display: none;">4. Innovation & Competitive Advantage</h2>
+                        <div class="section-description lang-th">
+                            ความสามารถในการสร้างสรรค์นวัตกรรมและพัฒนาขีดความสามารถที่สร้างความได้เปรียบในการแข่งขัน
+                        </div>
+                        <div class="section-description lang-en" style="display: none;">
+                            Ability to create innovation and develop capabilities that create competitive advantage
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text lang-th">7. ฉันส่งเสริมให้ทีมพัฒนานวัตกรรมที่สร้างมูลค่าเพิ่มและความได้เปรียบทางการแข่งขัน</div>
+                        <div class="question-text lang-en" style="display: none;">7. I encourage the team to develop innovations that create added value and competitive advantage</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q7_1" name="q7" value="1">
+                                <label for="q7_1" class="lang-th">ไม่เคย</label>
+                                <label for="q7_1" class="lang-en" style="display: none;">Never</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q7_2" name="q7" value="2">
+                                <label for="q7_2" class="lang-th">นานๆ ครั้ง</label>
+                                <label for="q7_2" class="lang-en" style="display: none;">Rarely</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q7_3" name="q7" value="3">
+                                <label for="q7_3" class="lang-th">บางครั้ง</label>
+                                <label for="q7_3" class="lang-en" style="display: none;">Sometimes</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q7_4" name="q7" value="4">
+                                <label for="q7_4" class="lang-th">บ่อยครั้ง</label>
+                                <label for="q7_4" class="lang-en" style="display: none;">Often</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q7_5" name="q7" value="5">
+                                <label for="q7_5" class="lang-th">เป็นประจำ</label>
+                                <label for="q7_5" class="lang-en" style="display: none;">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text lang-th">8. ฉันวิเคราะห์จุดแข็งและจุดอ่อนของคู่แข่งเพื่อพัฒนาขีดความสามารถขององค์กร</div>
+                        <div class="question-text lang-en" style="display: none;">8. I analyze competitors' strengths and weaknesses to develop organizational capabilities</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q8_1" name="q8" value="1">
+                                <label for="q8_1" class="lang-th">ไม่เคย</label>
+                                <label for="q8_1" class="lang-en" style="display: none;">Never</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q8_2" name="q8" value="2">
+                                <label for="q8_2" class="lang-th">นานๆ ครั้ง</label>
+                                <label for="q8_2" class="lang-en" style="display: none;">Rarely</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q8_3" name="q8" value="3">
+                                <label for="q8_3" class="lang-th">บางครั้ง</label>
+                                <label for="q8_3" class="lang-en" style="display: none;">Sometimes</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q8_4" name="q8" value="4">
+                                <label for="q8_4" class="lang-th">บ่อยครั้ง</label>
+                                <label for="q8_4" class="lang-en" style="display: none;">Often</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q8_5" name="q8" value="5">
+                                <label for="q8_5" class="lang-th">เป็นประจำ</label>
+                                <label for="q8_5" class="lang-en" style="display: none;">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section 5: Strategic Risk Management -->
+                <div class="section" id="section5" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="lang-th">5. การบริหารความเสี่ยงเชิงกลยุทธ์</h2>
+                        <h2 class="lang-en" style="display: none;">5. Strategic Risk Management</h2>
+                        <div class="section-description lang-th">
+                            ความสามารถในการประเมินและบริหารความเสี่ยงที่อาจส่งผลกระทบต่อการบรรลุเป้าหมายเชิงกลยุทธ์
+                        </div>
+                        <div class="section-description lang-en" style="display: none;">
+                            Ability to assess and manage risks that may impact the achievement of strategic goals
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text lang-th">9. ฉันระบุและประเมินความเสี่ยงเชิงกลยุทธ์ที่อาจขัดขวางการบรรลุวิสัยทัศน์องค์กร</div>
+                        <div class="question-text lang-en" style="display: none;">9. I identify and assess strategic risks that may hinder the achievement of the organizational vision</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q9_1" name="q9" value="1">
+                                <label for="q9_1" class="lang-th">ไม่เคย</label>
+                                <label for="q9_1" class="lang-en" style="display: none;">Never</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q9_2" name="q9" value="2">
+                                <label for="q9_2" class="lang-th">นานๆ ครั้ง</label>
+                                <label for="q9_2" class="lang-en" style="display: none;">Rarely</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q9_3" name="q9" value="3">
+                                <label for="q9_3" class="lang-th">บางครั้ง</label>
+                                <label for="q9_3" class="lang-en" style="display: none;">Sometimes</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q9_4" name="q9" value="4">
+                                <label for="q9_4" class="lang-th">บ่อยครั้ง</label>
+                                <label for="q9_4" class="lang-en" style="display: none;">Often</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q9_5" name="q9" value="5">
+                                <label for="q9_5" class="lang-th">เป็นประจำ</label>
+                                <label for="q9_5" class="lang-en" style="display: none;">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text lang-th">10. ฉันพัฒนามาตรการลดผลกระทบจากความเสี่ยงเชิงกลยุทธ์อย่างเป็นระบบและต่อเนื่อง</div>
+                        <div class="question-text lang-en" style="display: none;">10. I systematically and continuously develop measures to mitigate the impact of strategic risks</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" id="q10_1" name="q10" value="1">
+                                <label for="q10_1" class="lang-th">ไม่เคย</label>
+                                <label for="q10_1" class="lang-en" style="display: none;">Never</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q10_2" name="q10" value="2">
+                                <label for="q10_2" class="lang-th">นานๆ ครั้ง</label>
+                                <label for="q10_2" class="lang-en" style="display: none;">Rarely</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q10_3" name="q10" value="3">
+                                <label for="q10_3" class="lang-th">บางครั้ง</label>
+                                <label for="q10_3" class="lang-en" style="display: none;">Sometimes</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q10_4" name="q10" value="4">
+                                <label for="q10_4" class="lang-th">บ่อยครั้ง</label>
+                                <label for="q10_4" class="lang-en" style="display: none;">Often</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" id="q10_5" name="q10" value="5">
+                                <label for="q10_5" class="lang-th">เป็นประจำ</label>
+                                <label for="q10_5" class="lang-en" style="display: none;">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-container">
+                    <button type="button" id="prevBtn" class="lang-th" style="display: none;"><i class="fas fa-arrow-left"></i> ย้อนกลับ</button>
+                    <button type="button" id="prevBtn" class="lang-en" style="display: none;"><i class="fas fa-arrow-left"></i> Previous</button>
+                    
+                    <button type="button" id="nextBtn" class="lang-th">ถัดไป <i class="fas fa-arrow-right"></i></button>
+                    <button type="button" id="nextBtn" class="lang-en" style="display: none;">Next <i class="fas fa-arrow-right"></i></button>
+                    
+                    <button type="button" id="submitBtn" class="lang-th" style="display: none;"><i class="fas fa-paper-plane"></i> ส่งแบบประเมิน</button>
+                    <button type="button" id="submitBtn" class="lang-en" style="display: none;"><i class="fas fa-paper-plane"></i> Submit Assessment</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="card result-container" id="resultContainer">
+            <div class="result-header">
+                <h2 class="lang-th">ผลการประเมินเจตคติเชิงกลยุทธ์</h2>
+                <h2 class="lang-en" style="display: none;">Strategic Attitude Assessment Results</h2>
+                <p class="lang-th">แบบประเมินนี้วัดความสามารถเชิงกลยุทธ์ 5 มิติ ที่ส่งผลต่อความสำเร็จขององค์กรในระยะยาว</p>
+                <p class="lang-en" style="display: none;">This assessment measures 5 strategic capability dimensions that impact long-term organizational success</p>
+            </div>
+            
+            <div class="result-score" id="totalScore">0</div>
+            <div class="result-message" id="resultMessage"></div>
+            
+            <div class="results-content">
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                
+                <div class="dimension-scores">
+                    <div class="dimension">
+                        <div class="dimension-header">
+                            <div class="dimension-name lang-th">การคิดเชิงกลยุทธ์</div>
+                            <div class="dimension-name lang-en" style="display: none;">Strategic Thinking</div>
+                            <div class="dimension-value" id="dim1Score">0</div>
+                        </div>
+                        <div class="dimension-bar">
+                            <div class="dimension-progress" id="dim1Progress"></div>
+                        </div>
+                    </div>
+                    <div class="dimension">
+                        <div class="dimension-header">
+                            <div class="dimension-name lang-th">ผู้นำการเปลี่ยนแปลง</div>
+                            <div class="dimension-name lang-en" style="display: none;">Change Leadership</div>
+                            <div class="dimension-value" id="dim2Score">0</div>
+                        </div>
+                        <div class="dimension-bar">
+                            <div class="dimension-progress" id="dim2Progress"></div>
+                        </div>
+                    </div>
+                    <div class="dimension">
+                        <div class="dimension-header">
+                            <div class="dimension-name lang-th">การเชื่อมโยงเชิงกลยุทธ์</div>
+                            <div class="dimension-name lang-en" style="display: none;">Strategic Alignment</div>
+                            <div class="dimension-value" id="dim3Score">0</div>
+                        </div>
+                        <div class="dimension-bar">
+                            <div class="dimension-progress" id="dim3Progress"></div>
+                        </div>
+                    </div>
+                    <div class="dimension">
+                        <div class="dimension-header">
+                            <div class="dimension-name lang-th">นวัตกรรมและความได้เปรียบ</div>
+                            <div class="dimension-name lang-en" style="display: none;">Innovation & Advantage</div>
+                            <div class="dimension-value" id="dim4Score">0</div>
+                        </div>
+                        <div class="dimension-bar">
+                            <div class="dimension-progress" id="dim4Progress"></div>
+                        </div>
+                    </div>
+                    <div class="dimension">
+                        <div class="dimension-header">
+                            <div class="dimension-name lang-th">บริหารความเสี่ยงเชิงกลยุทธ์</div>
+                            <div class="dimension-name lang-en" style="display: none;">Strategic Risk Management</div>
+                            <div class="dimension-value" id="dim5Score">0</div>
+                        </div>
+                        <div class="dimension-bar">
+                            <div class="dimension-progress" id="dim5Progress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="recommendations">
+                <h3 class="lang-th">ข้อเสนอแนะสำหรับการพัฒนา</h3>
+                <h3 class="lang-en" style="display: none;">Development Recommendations</h3>
+                <ul class="lang-th">
+                    <li>พัฒนาทักษะการคิดเชิงกลยุทธ์ผ่านการวิเคราะห์กรณีศึกษาและสถานการณ์จำลอง</li>
+                    <li>เพิ่มความเข้าใจในอุตสาหกรรมและแนวโน้มการเปลี่ยนแปลงทางเทคโนโลยี</li>
+                    <li>ฝึกฝนการสื่อสารเชิงกลยุทธ์เพื่อสร้างการมีส่วนร่วมและความเข้าใจในทีม</li>
+                    <li>สร้างเครือข่ายกับผู้เชี่ยวชาญด้านกลยุทธ์เพื่อแลกเปลี่ยนแนวคิดและประสบการณ์</li>
+                </ul>
+                <ul class="lang-en" style="display: none;">
+                    <li>Develop strategic thinking skills through case study analysis and simulations</li>
+                    <li>Increase understanding of industry and technological change trends</li>
+                    <li>Practice strategic communication to create team engagement and understanding</li>
+                    <li>Build networks with strategy experts to exchange ideas and experiences</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="button" id="restartBtn" class="lang-th"><i class="fas fa-redo"></i> ทำแบบทดสอบอีกครั้ง</button>
+                <button type="button" id="restartBtn" class="lang-en" style="display: none;"><i class="fas fa-redo"></i> Retake Assessment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language toggle functionality
+            const thaiBtn = document.getElementById('thaiBtn');
+            const englishBtn = document.getElementById('englishBtn');
+            
+            thaiBtn.addEventListener('click', function() {
+                switchLanguage('th');
+            });
+            
+            englishBtn.addEventListener('click', function() {
+                switchLanguage('en');
+            });
+            
+            function switchLanguage(lang) {
+                // Update button states
+                if (lang === 'th') {
+                    thaiBtn.classList.add('active');
+                    englishBtn.classList.remove('active');
+                } else {
+                    thaiBtn.classList.remove('active');
+                    englishBtn.classList.add('active');
+                }
+                
+                // Show/hide language elements
+                const thElements = document.querySelectorAll('.lang-th');
+                const enElements = document.querySelectorAll('.lang-en');
+                
+                if (lang === 'th') {
+                    thElements.forEach(el => el.style.display = '');
+                    enElements.forEach(el => el.style.display = 'none');
+                } else {
+                    thElements.forEach(el => el.style.display = 'none');
+                    enElements.forEach(el => el.style.display = '');
+                }
+                
+                // Update chart if it exists
+                if (window.radarChart) {
+                    updateChartLabels(lang);
+                }
+            }
+            
+            // Test navigation functionality
+            const sections = document.querySelectorAll('.section');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const currentSectionEl = document.getElementById('currentSection');
+            const resultContainer = document.getElementById('resultContainer');
+            const restartBtn = document.getElementById('restartBtn');
+            
+            let currentSection = 0;
+            
+            // Initialize progress bar
+            updateProgressBar();
+            
+            // Next button click handler
+            nextBtn.addEventListener('click', function() {
+                if (validateSection(currentSection)) {
+                    if (currentSection < sections.length - 1) {
+                        sections[currentSection].style.display = 'none';
+                        currentSection++;
+                        sections[currentSection].style.display = 'block';
+                        updateProgressBar();
+                        updateButtonVisibility();
+                    }
+                } else {
+                    alert(getAlertMessage());
+                }
+            });
+            
+            // Previous button click handler
+            prevBtn.addEventListener('click', function() {
+                sections[currentSection].style.display = 'none';
+                currentSection--;
+                sections[currentSection].style.display = 'block';
+                updateProgressBar();
+                updateButtonVisibility();
+            });
+            
+            // Submit button click handler
+            submitBtn.addEventListener('click', function() {
+                if (validateSection(currentSection)) {
+                    calculateResults();
+                    document.getElementById('strategicAttitudeTest').style.display = 'none';
+                    resultContainer.style.display = 'block';
+                } else {
+                    alert(getAlertMessage());
+                }
+            });
+            
+            // Restart button click handler
+            restartBtn.addEventListener('click', function() {
+                document.getElementById('strategicAttitudeTest').reset();
+                document.getElementById('strategicAttitudeTest').style.display = 'block';
+                resultContainer.style.display = 'none';
+                
+                // Reset to first section
+                sections.forEach(section => section.style.display = 'none');
+                currentSection = 0;
+                sections[currentSection].style.display = 'block';
+                updateProgressBar();
+                updateButtonVisibility();
+                
+                // Destroy existing chart
+                if (window.radarChart) {
+                    window.radarChart.destroy();
+                }
+            });
+            
+            // Update progress bar
+            function updateProgressBar() {
+                const progress = ((currentSection + 1) / sections.length) * 100;
+                progressBar.style.width = `${progress}%`;
+                progressPercentage.textContent = `${Math.round(progress)}%`;
+                currentSectionEl.textContent = currentSection + 1;
+            }
+            
+            // Update button visibility based on current section
+            function updateButtonVisibility() {
+                if (currentSection === 0) {
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'block';
+                    submitBtn.style.display = 'none';
+                } else if (currentSection === sections.length - 1) {
+                    prevBtn.style.display = 'block';
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'block';
+                } else {
+                    prevBtn.style.display = 'block';
+                    nextBtn.style.display = 'block';
+                    submitBtn.style.display = 'none';
+                }
+            }
+            
+            // Validate if all questions in current section are answered
+            function validateSection(sectionIndex) {
+                const currentSection = sections[sectionIndex];
+                const questions = currentSection.querySelectorAll('input[type="radio"]');
+                const questionGroups = {};
+                
+                // Group radio buttons by name
+                questions.forEach(question => {
+                    if (!questionGroups[question.name]) {
+                        questionGroups[question.name] = [];
+                    }
+                    questionGroups[question.name].push(question);
+                });
+                
+                // Check if at least one option is selected in each group
+                for (const groupName in questionGroups) {
+                    const isAnswered = questionGroups[groupName].some(option => option.checked);
+                    if (!isAnswered) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+            
+            // Get alert message based on current language
+            function getAlertMessage() {
+                if (thaiBtn.classList.contains('active')) {
+                    return 'กรุณาตอบคำถามทั้งหมดในส่วนนี้ก่อนดำเนินการต่อ';
+                } else {
+                    return 'Please answer all questions in this section before proceeding';
+                }
+            }
+            
+            // Calculate and display results
+            function calculateResults() {
+                // Calculate dimension scores
+                const dim1Score = calculateDimensionScore(['q1', 'q2']);
+                const dim2Score = calculateDimensionScore(['q3', 'q4']);
+                const dim3Score = calculateDimensionScore(['q5', 'q6']);
+                const dim4Score = calculateDimensionScore(['q7', 'q8']);
+                const dim5Score = calculateDimensionScore(['q9', 'q10']);
+                
+                // Calculate total score
+                const totalScore = dim1Score + dim2Score + dim3Score + dim4Score + dim5Score;
+                
+                // Display scores
+                document.getElementById('dim1Score').textContent = dim1Score;
+                document.getElementById('dim2Score').textContent = dim2Score;
+                document.getElementById('dim3Score').textContent = dim3Score;
+                document.getElementById('dim4Score').textContent = dim4Score;
+                document.getElementById('dim5Score').textContent = dim5Score;
+                document.getElementById('totalScore').textContent = totalScore;
+                
+                // Update progress bars for each dimension
+                updateDimensionProgress('dim1Progress', dim1Score);
+                updateDimensionProgress('dim2Progress', dim2Score);
+                updateDimensionProgress('dim3Progress', dim3Score);
+                updateDimensionProgress('dim4Progress', dim4Score);
+                updateDimensionProgress('dim5Progress', dim5Score);
+                
+                // Create radar chart
+                createRadarChart([dim1Score, dim2Score, dim3Score, dim4Score, dim5Score]);
+                
+                // Display result message
+                const resultMessage = document.getElementById('resultMessage');
+                if (totalScore >= 45) {
+                    resultMessage.textContent = thaiBtn.classList.contains('active') ? 
+                        'ยินดีด้วย! คุณมีเจตคติเชิงกลยุทธ์ในระดับที่ยอดเยี่ยม และมีศักยภาพในการเป็นผู้นำการเปลี่ยนแปลงองค์กร' : 
+                        'Congratulations! You have an excellent strategic attitude and potential to lead organizational change';
+                } else if (totalScore >= 35) {
+                    resultMessage.textContent = thaiBtn.classList.contains('active') ? 
+                        'คุณมีเจตคติเชิงกลยุทธ์ในระดับดี และสามารถพัฒนาต่อยอดสู่การเป็นผู้บริหารเชิงกลยุทธ์ได้' : 
+                        'You have a good strategic attitude and can develop further to become a strategic executive';
+                } else if (totalScore >= 25) {
+                    resultMessage.textContent = thaiBtn.classList.contains('active') ? 
+                        'คุณมีพื้นฐานด้านการคิดเชิงกลยุทธ์ และควรพัฒนาทักษะเพิ่มเติมเพื่อเพิ่มขีดความสามารถ' : 
+                        'You have basic strategic thinking skills and should develop additional skills to enhance your capabilities';
+                } else {
+                    resultMessage.textContent = thaiBtn.classList.contains('active') ? 
+                        'คุณมีพื้นที่สำหรับการพัฒนาด้านการคิดเชิงกลยุทธ์อย่างมีนัยสำคัญ ควรเริ่มจากการทำความเข้าใจแนวคิดพื้นฐาน' : 
+                        'You have significant room for improvement in strategic thinking and should start by understanding basic concepts';
+                }
+            }
+            
+            // Calculate score for a dimension (group of questions)
+            function calculateDimensionScore(questionNames) {
+                let score = 0;
+                questionNames.forEach(qName => {
+                    const selectedOption = document.querySelector(`input[name="${qName}"]:checked`);
+                    if (selectedOption) {
+                        score += parseInt(selectedOption.value);
+                    }
+                });
+                return score;
+            }
+            
+            // Update progress bar for a dimension
+            function updateDimensionProgress(elementId, score) {
+                const progressElement = document.getElementById(elementId);
+                const percentage = (score / 10) * 100;
+                progressElement.style.width = `${percentage}%`;
+            }
+            
+            // Create radar chart
+            function createRadarChart(scores) {
+                const ctx = document.getElementById('radarChart').getContext('2d');
+                
+                // Get labels based on current language
+                const labels = thaiBtn.classList.contains('active') ? 
+                    ['การคิดเชิงกลยุทธ์', 'ผู้นำการเปลี่ยนแปลง', 'การเชื่อมโยงเชิงกลยุทธ์', 'นวัตกรรมและความได้เปรียบ', 'บริหารความเสี่ยงเชิงกลยุทธ์'] :
+                    ['Strategic Thinking', 'Change Leadership', 'Strategic Alignment', 'Innovation & Advantage', 'Strategic Risk Management'];
+                
+                // Normalize scores to percentage (each dimension has max score of 10)
+                const normalizedScores = scores.map(score => (score / 10) * 100);
+                
+                window.radarChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: thaiBtn.classList.contains('active') ? 'ระดับความสามารถ' : 'Capability Level',
+                            data: normalizedScores,
+                            backgroundColor: 'rgba(46, 134, 193, 0.2)',
+                            borderColor: 'rgba(46, 134, 193, 1)',
+                            pointBackgroundColor: 'rgba(46, 134, 193, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(46, 134, 193, 1)',
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                            r: {
+                                angleLines: {
+                                    display: true,
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: 100,
+                                ticks: {
+                                    stepSize: 20,
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.dataset.label || '';
+                                        const value = context.raw;
+                                        const score = scores[context.dataIndex];
+                                        return `${label}: ${value}% (${score}/10)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Update chart labels when language changes
+            function updateChartLabels(lang) {
+                if (!window.radarChart) return;
+                
+                const labels = lang === 'th' ? 
+                    ['การคิดเชิงกลยุทธ์', 'ผู้นำการเปลี่ยนแปลง', 'การเชื่อมโยงเชิงกลยุทธ์', 'นวัตกรรมและความได้เปรียบ', 'บริหารความเสี่ยงเชิงกลยุทธ์'] :
+                    ['Strategic Thinking', 'Change Leadership', 'Strategic Alignment', 'Innovation & Advantage', 'Strategic Risk Management'];
+                
+                window.radarChart.data.labels = labels;
+                window.radarChart.data.datasets[0].label = lang === 'th' ? 'ระดับความสามารถ' : 'Capability Level';
+                window.radarChart.update();
+            }
+            
+            // Initialize button visibility
+            updateButtonVisibility();
+        });
+    </script>
+</body>
+</html>
