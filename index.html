@@ -1012,14 +1012,10 @@
             
             // Test navigation functionality
             const sections = document.querySelectorAll('.section');
-            const prevBtns = document.querySelectorAll('#prevBtn');
-            const nextBtns = document.querySelectorAll('#nextBtn');
-            const submitBtns = document.querySelectorAll('#submitBtn');
             const progressBar = document.getElementById('progressBar');
             const progressPercentage = document.getElementById('progressPercentage');
             const currentSectionEl = document.getElementById('currentSection');
             const resultContainer = document.getElementById('resultContainer');
-            const restartBtns = document.querySelectorAll('#restartBtn');
             
             let currentSection = 0;
             
@@ -1027,8 +1023,8 @@
             updateProgressBar();
             
             // Next button click handler
-            nextBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
+            document.addEventListener('click', function(e) {
+                if (e.target && (e.target.id === 'nextBtn' || e.target.closest('#nextBtn'))) {
                     if (validateSection(currentSection)) {
                         if (currentSection < sections.length - 1) {
                             sections[currentSection].style.display = 'none';
@@ -1040,23 +1036,23 @@
                     } else {
                         alert(getAlertMessage());
                     }
-                });
+                }
             });
             
             // Previous button click handler
-            prevBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
+            document.addEventListener('click', function(e) {
+                if (e.target && (e.target.id === 'prevBtn' || e.target.closest('#prevBtn'))) {
                     sections[currentSection].style.display = 'none';
                     currentSection--;
                     sections[currentSection].style.display = 'block';
                     updateProgressBar();
                     updateButtonVisibility();
-                });
+                }
             });
             
             // Submit button click handler
-            submitBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
+            document.addEventListener('click', function(e) {
+                if (e.target && (e.target.id === 'submitBtn' || e.target.closest('#submitBtn'))) {
                     if (validateSection(currentSection)) {
                         calculateResults();
                         document.getElementById('strategicAttitudeTest').style.display = 'none';
@@ -1064,12 +1060,12 @@
                     } else {
                         alert(getAlertMessage());
                     }
-                });
+                }
             });
             
             // Restart button click handler
-            restartBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
+            document.addEventListener('click', function(e) {
+                if (e.target && (e.target.id === 'restartBtn' || e.target.closest('#restartBtn'))) {
                     document.getElementById('strategicAttitudeTest').reset();
                     document.getElementById('strategicAttitudeTest').style.display = 'block';
                     resultContainer.style.display = 'none';
@@ -1085,7 +1081,7 @@
                     if (window.radarChart) {
                         window.radarChart.destroy();
                     }
-                });
+                }
             });
             
             // Update progress bar
@@ -1100,76 +1096,47 @@
             function updateButtonVisibility() {
                 const isThai = thaiBtn.classList.contains('active');
                 
-                if (currentSection === 0) {
-                    // First section - hide previous button
-                    document.querySelectorAll('#prevBtn').forEach(btn => {
+                // Handle previous buttons
+                document.querySelectorAll('#prevBtn').forEach(btn => {
+                    if (currentSection === 0) {
                         btn.style.display = 'none';
-                    });
-                    
-                    // Show next button in current language
-                    document.querySelectorAll('#nextBtn').forEach(btn => {
+                    } else {
                         if ((isThai && btn.classList.contains('lang-th')) || 
                             (!isThai && btn.classList.contains('lang-en'))) {
                             btn.style.display = 'block';
                         } else {
                             btn.style.display = 'none';
                         }
-                    });
-                    
-                    // Hide submit button
-                    document.querySelectorAll('#submitBtn').forEach(btn => {
+                    }
+                });
+                
+                // Handle next buttons
+                document.querySelectorAll('#nextBtn').forEach(btn => {
+                    if (currentSection === sections.length - 1) {
                         btn.style.display = 'none';
-                    });
-                } else if (currentSection === sections.length - 1) {
-                    // Last section - show previous and submit buttons
-                    document.querySelectorAll('#prevBtn').forEach(btn => {
+                    } else {
                         if ((isThai && btn.classList.contains('lang-th')) || 
                             (!isThai && btn.classList.contains('lang-en'))) {
                             btn.style.display = 'block';
                         } else {
                             btn.style.display = 'none';
                         }
-                    });
-                    
-                    // Hide next button
-                    document.querySelectorAll('#nextBtn').forEach(btn => {
+                    }
+                });
+                
+                // Handle submit buttons
+                document.querySelectorAll('#submitBtn').forEach(btn => {
+                    if (currentSection === sections.length - 1) {
+                        if ((isThai && btn.classList.contains('lang-th')) || 
+                            (!isThai && btn.classList.contains('lang-en'))) {
+                            btn.style.display = 'block';
+                        } else {
+                            btn.style.display = 'none';
+                        }
+                    } else {
                         btn.style.display = 'none';
-                    });
-                    
-                    // Show submit button in current language
-                    document.querySelectorAll('#submitBtn').forEach(btn => {
-                        if ((isThai && btn.classList.contains('lang-th')) || 
-                            (!isThai && btn.classList.contains('lang-en'))) {
-                            btn.style.display = 'block';
-                        } else {
-                            btn.style.display = 'none';
-                        }
-                    });
-                } else {
-                    // Middle sections - show previous and next buttons
-                    document.querySelectorAll('#prevBtn').forEach(btn => {
-                        if ((isThai && btn.classList.contains('lang-th')) || 
-                            (!isThai && btn.classList.contains('lang-en'))) {
-                            btn.style.display = 'block';
-                        } else {
-                            btn.style.display = 'none';
-                        }
-                    });
-                    
-                    document.querySelectorAll('#nextBtn').forEach(btn => {
-                        if ((isThai && btn.classList.contains('lang-th')) || 
-                            (!isThai && btn.classList.contains('lang-en'))) {
-                            btn.style.display = 'block';
-                        } else {
-                            btn.style.display = 'none';
-                        }
-                    });
-                    
-                    // Hide submit button
-                    document.querySelectorAll('#submitBtn').forEach(btn => {
-                        btn.style.display = 'none';
-                    });
-                }
+                    }
+                });
             }
             
             // Validate if all questions in current section are answered
